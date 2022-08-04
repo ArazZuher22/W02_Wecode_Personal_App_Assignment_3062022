@@ -5,45 +5,46 @@ import '../services/message_database.dart';
 import '../widgets/message_card_widget.dart';
 import '../widgets/textfieldform_widget.dart';
 
-class MessagesBoardScreenView extends StatefulWidget {
-  const MessagesBoardScreenView({Key? key}) : super(key: key);
+class MessagesAnonymousScreenView extends StatefulWidget {
+  const MessagesAnonymousScreenView({Key? key}) : super(key: key);
 
   @override
-  State<MessagesBoardScreenView> createState() =>
-      MessagesBoardScreenViewState();
+  State<MessagesAnonymousScreenView> createState() =>
+      _MessagesAnonymousScreenView();
 }
 
-class MessagesBoardScreenViewState extends State<MessagesBoardScreenView> {
-  
-  final _nameController = TextEditingController();
+class _MessagesAnonymousScreenView extends State<MessagesAnonymousScreenView> {
+  final _titleController = TextEditingController();
   final _messageController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
   bool buttonFlag = false;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: const Color.fromARGB(255, 86, 168, 109),
+      ),
       body: Center(
         child: Column(
           children: [
-
             Expanded(
               child: Container(
-                margin: const EdgeInsets.fromLTRB(25, 25, 25, 0),
+                margin: const EdgeInsets.fromLTRB(25, 0, 25, 0),
                 child: Column(
                   children: [
                     Container(
-                        margin: const EdgeInsets.fromLTRB(50, 50, 50, 10),
+                        margin: const EdgeInsets.fromLTRB(50, 5, 50, 5),
                         child: const Text(
-                          'MESSAGES',
+                          'ANONYMOUS MESSAGES',
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 24,
                           ),
                         )),
-                    SizedBox(
-                      height: 320,
+                    Expanded(
                       child: FutureBuilder<QuerySnapshot<Map<String, dynamic>>>(
-                        future: DatabaseOperation().readTheMessagesDocument(),
+                        future: DatabaseOperation()
+                            .readTheMessagesAnonymousDocument(),
                         builder: (context, snapshot) {
                           if (snapshot.connectionState ==
                               ConnectionState.waiting) {
@@ -65,10 +66,13 @@ class MessagesBoardScreenViewState extends State<MessagesBoardScreenView> {
                             itemCount: snapshot.data!.docs.length,
                             itemBuilder: (context, index) {
                               return MessageCardWidget(
-                                messageName: snapshot.data!.docs[index].data()['userName'].toString(),
-                                messageDetails: snapshot.data!.docs[index].data()['userMessage'].toString(),
+                                messageName: snapshot.data!.docs[index]
+                                    .data()['titleMessage']
+                                    .toString(),
+                                messageDetails: snapshot.data!.docs[index]
+                                    .data()['message']
+                                    .toString(),
                               );
-                              
                             },
                           );
                         },
@@ -78,9 +82,7 @@ class MessagesBoardScreenViewState extends State<MessagesBoardScreenView> {
                 ),
               ),
             ),
-            
             const Divider(height: 5),
-            
             Container(
               height: 250,
               margin: const EdgeInsets.fromLTRB(25, 0, 25, 25),
@@ -102,30 +104,25 @@ class MessagesBoardScreenViewState extends State<MessagesBoardScreenView> {
                         ),
                       ],
                     ),
-                    
                     Row(
                       children: [
                         Expanded(
-                          child:TextFormFieldWidget(
+                          child: TextFormFieldWidget(
                             labelTextField: 'MESSAGE',
                             nameController: _messageController,
                             messageFlag: true,
-                            ), 
                           ),
-                      
-                        
+                        ),
                       ],
                     ),
-
                     Row(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
                         Expanded(
-                          child: TextFormFieldWidget(
-                            labelTextField: 'NAME',
-                            nameController: _nameController,
-                            )
-                        ),
+                            child: TextFormFieldWidget(
+                          labelTextField: 'TITLE',
+                          nameController: _titleController,
+                        )),
                         Container(
                           padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
                           width: 50,
@@ -137,8 +134,9 @@ class MessagesBoardScreenViewState extends State<MessagesBoardScreenView> {
                                   setState(() {
                                     buttonFlag = true;
                                   });
-                                  await DatabaseOperation().addAMessageToTheDB(
-                                          name: _nameController.text,
+                                  await DatabaseOperation()
+                                      .addAMessageAnonymousToTheDB(
+                                          title: _titleController.text,
                                           message: _messageController.text)
                                       .then((value) => debugPrint(value.path));
                                   setState(() {
@@ -172,6 +170,4 @@ class MessagesBoardScreenViewState extends State<MessagesBoardScreenView> {
       ),
     );
   }
-
-  
 }

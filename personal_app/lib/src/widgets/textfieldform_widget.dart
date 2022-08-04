@@ -8,11 +8,13 @@ class TextFormFieldWidget extends StatefulWidget {
     required this.labelTextField,
     required this.nameController,
     this.messageFlag,
+    this.isPasswordFlag
   }) : super(key: key);
 
   String labelTextField;
   TextEditingController nameController = TextEditingController();
-  bool? messageFlag = false;
+  bool? messageFlag = false;// message flag for multiline textfield
+  bool? isPasswordFlag = false;// password flag used when your textfield should be password
 
   @override
   State<TextFormFieldWidget> createState() => _TextFormFieldWidget();
@@ -20,6 +22,7 @@ class TextFormFieldWidget extends StatefulWidget {
 
 class _TextFormFieldWidget extends State<TextFormFieldWidget> {
   
+  bool _isObscure = true;// used when our textfield isPasswordFlag = true 
 
   @override
   Widget build(BuildContext context) {
@@ -28,6 +31,8 @@ class _TextFormFieldWidget extends State<TextFormFieldWidget> {
       validator: (value) {
         if (value == null || value.isEmpty) {
           return "Required";
+        }else if (widget.isPasswordFlag ==true && value.length < 8) {
+          return "Password length less than 8 ";
         } else {
           return null;
         }
@@ -47,12 +52,31 @@ class _TextFormFieldWidget extends State<TextFormFieldWidget> {
           borderRadius: BorderRadius.all(Radius.circular(10.0)),
           borderSide: BorderSide(color: Color(0xff12bf42), width: 2),
         ),
+
+        // for passowrd icon 
+        suffixIcon: widget.isPasswordFlag==true ? IconButton(
+                      onPressed: () {
+                        setState(() {
+                          _isObscure = !_isObscure;
+                        });
+                      },
+                      icon: Icon(_isObscure? Icons.visibility: Icons.visibility_off)
+                      )
+                      :null,
+
       ),
+      
+      // when using messageFlag 
       minLines: widget.messageFlag==true ? 4:null,
-      maxLines: widget.messageFlag==true ? 6:null,
-      keyboardType: widget.messageFlag==true ? TextInputType.multiline:TextInputType.name,
+      maxLines: widget.messageFlag==true ? 6:1,
+      keyboardType: widget.messageFlag==true ? TextInputType.multiline:TextInputType.none,
       textInputAction: widget.messageFlag==true ? TextInputAction.next:TextInputAction.none ,
 
+      // when using isPassowrdFlag 
+      obscureText: widget.isPasswordFlag==true ? _isObscure:false,
+      enableSuggestions: widget.isPasswordFlag==true ? false:true,
+      autocorrect: widget.isPasswordFlag==true ? false:true,
+      
     );
   }
 }

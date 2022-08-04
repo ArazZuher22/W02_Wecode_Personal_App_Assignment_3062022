@@ -1,7 +1,8 @@
 
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:personal_app/src/screens/MessagesBoardScreenView.dart';
+import 'package:personal_app/src/screens/LoginScreenView.dart';
+import 'package:personal_app/src/screens/MessagesAnonymousScreenView.dart';
 import '../widgets/link_card_widget.dart';
 
 
@@ -17,10 +18,47 @@ class _MyProfileScreenViewState extends State<MyProfileScreenView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        
         body: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
+            Stack(
+              children: [
+                Align(
+                  alignment: AlignmentDirectional.topEnd,
+                  child: Container(
+                    margin: const EdgeInsets.all(8.0),
+                    padding: const EdgeInsets.all(5),
+                    
+                    decoration: BoxDecoration(
+                        border: Border.all(
+                            color: const Color(0xFFFFF2F2),
+                            style: BorderStyle.solid,
+                            width: 2.0,
+                        ),
+                        color: const Color(0xFFFFF2F2),
+
+                        borderRadius: BorderRadius.circular(30.0),
+                    ),
+                    child: TextButton(
+                      onPressed: (){
+                         Navigator.of(context).push(MaterialPageRoute(
+                              builder: (context) => LoginScreenView(),
+                            ));
+                      },
+                      child: const Text('Login',style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black,
+                        
+                      ),),
+                    ),
+                  ),
+                ),
+
+              ],
+            ),
             Container(
               alignment: Alignment.topCenter,
               child: const CircleAvatar(
@@ -107,7 +145,7 @@ class _MyProfileScreenViewState extends State<MyProfileScreenView> {
                         GestureDetector(
                           onTap: () {
                             Navigator.of(context).push(MaterialPageRoute(
-                              builder: (context) => MessagesBoardScreenView(),
+                              builder: (context) => MessagesAnonymousScreenView(),
                             ));
                           },
                           child: const CircleAvatar(

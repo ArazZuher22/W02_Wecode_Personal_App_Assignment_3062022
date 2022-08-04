@@ -42,7 +42,22 @@ class LinkCardWidget {
                         );
   }
 
-
+  Widget textLinkCard({
+      required String url,
+      required String text,
+      required Color textColor,
+      required int textSize,
+      }){
+        return  GestureDetector(
+                          onTap: () {
+                            _launchUrl(url);
+                          },
+                          child: Text(text,style: TextStyle(
+                            color: textColor,
+                            fontSize: textSize.toDouble(),
+                          ),)
+                        );
+  }
   void _launchUrl(String vistUrl) async {
     if (!await launchUrl(Uri.parse(vistUrl))) throw 'Could not launch ';
   }
